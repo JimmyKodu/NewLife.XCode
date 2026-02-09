@@ -1,5 +1,23 @@
 # NewLife.XCode 更新日志
 
+## v11.24.2026.0209 (2026-02-09)
+
+### 新功能
+- **[feat]** 添加 .NET 10.0 目标框架支持
+  - XCode 核心库现支持 net45、net461、netstandard2.0、netstandard2.1、net10.0 五个目标框架
+  - 所有数据库提供程序（MySql、SqlServer、SQLite、PostgreSQL、Oracle、DaMeng、DB2、KingBase、HighGo）均已支持 .NET 10.0
+  - 保持对旧版本 .NET Framework 的完全兼容
+  - 利用最新 C# 语法特性提升代码质量
+
+### 重要修复
+- **[fix]** 添加 System.Diagnostics 命名空间以支持 StackTraceHiddenAttribute 在 .NET 10.0 中的使用
+
+### 兼容性
+- 向后兼容：所有原有目标框架保持不变
+- 新应用可以直接使用 .NET 10.0 构建高性能数据访问层
+
+---
+
 ## v11.24.2026.0102 (2026-01-02)
 
 ### 新功能
