@@ -28,3 +28,5 @@ bld/
 /XCode/Membership/Config
 /XUnitTest.XCode/TestEntity/Config
 /XCode/Membership/Log
+/XCode/.github/
+/XCode.EFCore/.github/
