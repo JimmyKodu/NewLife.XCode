@@ -53,6 +53,19 @@ NuGet 引用（任一项目）：
 ```
 dotnet add package NewLife.XCode
 ```
+
+**EF Core 10 集成（.NET 10+）**：
+```
+dotnet add package NewLife.XCode.EFCore
+```
+提供 XCode 与 Entity Framework Core 10 的互操作能力，支持：
+- XCode 实体自动映射到 EF Core
+- 共享数据库连接配置
+- 事务协调
+- 查询转换与分页集成
+
+详细文档：[XCode.EFCore 使用指南](XCode.EFCore/Readme.MD)
+
 或使用模板脚手架：
 ```
 dotnet new install NewLife.Templates
