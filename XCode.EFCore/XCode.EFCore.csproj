@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
+  <PropertyGroup>
+    <TargetFramework>net10.0.0</TargetFramework>
+    <AssemblyName>XCode.EFCore</AssemblyName>
+    <RootNamespace>XCode.EFCore</RootNamespace>
+    <AssemblyTitle>XCode EF Core 10 适配</AssemblyTitle>
+    <Description>基于 XCode 元数据的 EF Core 10 映射支持</Description>
+    <Company>新生命开发团队</Company>
+    <Copyright>©2002-2026 NewLife</Copyright>
+    <VersionPrefix>11.24</VersionPrefix>
+    <VersionSuffix>$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</VersionSuffix>
+    <Version>$(VersionPrefix).$(VersionSuffix)</Version>
+    <FileVersion>$(Version)</FileVersion>
+    <AssemblyVersion>$(VersionPrefix).$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</AssemblyVersion>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>NewLife.XCode.EFCore</PackageId>
+    <Authors>$(Company)</Authors>
+    <PackageProjectUrl>https://newlifex.com/xcode</PackageProjectUrl>
+    <PackageIcon>leaf.png</PackageIcon>
+    <RepositoryUrl>https://github.com/NewLifeX/X</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>新生命团队;X组件;NewLife;EFCore;$(AssemblyName)</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageReadmeFile>Readme.MD</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="..\Doc\leaf.png" Link="leaf.png" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Readme.MD">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\XCode\XCode.csproj" />
+  </ItemGroup>
+</Project>

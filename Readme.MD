@@ -62,6 +62,19 @@ dotnet build
 ```
 > 强命名证书已内置（newlife.snk），可自行重编译用于企业私有框架。
 
+### 2.1 EF Core 10 适配
+需要与 EF Core 10 协作时，可引用适配包：
+```
+dotnet add package NewLife.XCode.EFCore
+```
+示例（使用 XCode 元数据自动映射）：
+```csharp
+var options = new DbContextOptionsBuilder()
+    .UseSqlServer("Server=.;Database=demo;Trusted_Connection=True;")
+    .Options;
+using var db = new XCode.EFCore.XCodeDbContext(options, "test");
+```
+
 ---
 ## 3. 架构与核心概念
 XCode 采用“模型驱动 + 运行时元数据 + 多级缓存 + 可选分片”的分层架构。
