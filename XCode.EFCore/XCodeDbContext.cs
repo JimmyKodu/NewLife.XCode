@@ -56,7 +56,7 @@ public class XCodeDbContext : DbContext
             }
             catch (ReflectionTypeLoadException ex)
             {
-                types = ex.Types.Where(t => t != null).ToArray()!;
+                types = ex.Types.Where(t => t != null).Cast<Type>().ToArray();
             }
 
             foreach (var type in types)

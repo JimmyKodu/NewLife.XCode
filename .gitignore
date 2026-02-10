@@ -28,3 +28,4 @@ bld/
 /XCode/Membership/Config
 /XUnitTest.XCode/TestEntity/Config
 /XCode/Membership/Log
+**/.github/copilot-instructions.md

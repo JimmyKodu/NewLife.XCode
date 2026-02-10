@@ -20,10 +20,10 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<XCodeDbContext>((sp, options) =>
         {
             optionsAction(options);
-        });
+        }, contextLifetime: ServiceLifetime.Scoped, optionsLifetime: ServiceLifetime.Scoped);
 
-        // 注册工厂以传递程序集参数
-        services.AddScoped(sp =>
+        // 覆盖默认工厂，传递程序集参数
+        services.AddScoped<XCodeDbContext>(sp =>
         {
             var options = sp.GetRequiredService<DbContextOptions<XCodeDbContext>>();
             return new XCodeDbContext(options, assemblies);
