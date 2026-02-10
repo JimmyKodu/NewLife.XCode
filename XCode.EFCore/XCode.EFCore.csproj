@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>XCode.EFCore</AssemblyName>
+    <RootNamespace>XCode.EFCore</RootNamespace>
+    <AssemblyTitle>XCode EF Core 集成库</AssemblyTitle>
+    <Description>XCode 与 EF Core 10 的集成桥接库，自动将 XCode 实体元数据映射到 EF Core 模型</Description>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\XCode\XCode.csproj" />
+  </ItemGroup>
+
+</Project>
