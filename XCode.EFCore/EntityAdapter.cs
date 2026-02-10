@@ -27,7 +27,7 @@ public class EntityAdapter
     /// <summary>查询实体列表</summary>
     /// <typeparam name="TEntity">实体类型</typeparam>
     /// <param name="where">查询条件</param>
-    /// <returns></returns>
+    /// <returns>实体列表</returns>
     public IList<TEntity> Query<TEntity>(String? where = null) where TEntity : class, IModel, new()
     {
         using var session = Database.CreateSession();
@@ -42,7 +42,7 @@ public class EntityAdapter
     /// <summary>查询单个实体</summary>
     /// <typeparam name="TEntity">实体类型</typeparam>
     /// <param name="key">主键值</param>
-    /// <returns></returns>
+    /// <returns>实体对象，未找到时返回 null</returns>
     public TEntity? Find<TEntity>(Object key) where TEntity : class, IModel, new()
     {
         using var session = Database.CreateSession();

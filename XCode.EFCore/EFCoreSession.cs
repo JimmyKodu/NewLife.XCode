@@ -1,7 +1,6 @@
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.EntityFrameworkCore;
 using NewLife;
 using NewLife.Data;
 using XCode.DataAccessLayer;
@@ -27,7 +26,6 @@ public class EFCoreSession : DisposeBase, IDbSession
     /// <summary>是否输出SQL</summary>
     public Boolean ShowSQL { get; set; }
 
-    private DbContext? _context;
     private DbConnection? _connection;
     private DbTransaction? _transaction;
     private Int32 _transactionCount;
@@ -50,7 +48,6 @@ public class EFCoreSession : DisposeBase, IDbSession
         {
             _transaction?.Dispose();
             _connection?.Dispose();
-            _context?.Dispose();
         }
         catch { }
     }
@@ -303,17 +300,45 @@ public class EFCoreSession : DisposeBase, IDbSession
     }
 
     /// <summary>执行插入语句并返回新增行的自动编号</summary>
+    /// <remarks>
+    /// 根据数据库类型使用不同的自增ID获取语句：
+    /// - SQLite: SELECT LAST_INSERT_ROWID()
+    /// - SQL Server: SELECT SCOPE_IDENTITY()
+    /// - MySQL: SELECT LAST_INSERT_ID()
+    /// - PostgreSQL: 需要在INSERT语句中使用RETURNING
+    /// </remarks>
     public Int64 InsertAndGetIdentity(String sql, CommandType type = CommandType.Text, params IDataParameter[]? ps)
     {
         return Process(conn =>
         {
-            // 添加返回自增 ID 的语句
-            var identitySql = sql + "; SELECT LAST_INSERT_ROWID();";
+            // 根据数据库类型确定获取自增ID的语句
+            var identitySuffix = GetIdentitySelectSql(conn);
+            var identitySql = sql + identitySuffix;
 
             using var cmd = CreateCommand(conn, identitySql, type, ps);
             var result = cmd.ExecuteScalar();
             return result == null ? 0 : Convert.ToInt64(result);
         });
+    }
+
+    private String GetIdentitySelectSql(DbConnection conn)
+    {
+        var typeName = conn.GetType().Name.ToLowerInvariant();
+
+        // 根据连接类型判断数据库类型
+        if (typeName.Contains("sqlite"))
+            return "; SELECT LAST_INSERT_ROWID();";
+        if (typeName.Contains("sqlserver") || typeName.Contains("sqlconnection"))
+            return "; SELECT SCOPE_IDENTITY();";
+        if (typeName.Contains("mysql"))
+            return "; SELECT LAST_INSERT_ID();";
+        if (typeName.Contains("npgsql") || typeName.Contains("postgres"))
+            return " RETURNING id;"; // PostgreSQL 通常需要在INSERT中使用RETURNING
+        if (typeName.Contains("oracle"))
+            return ""; // Oracle 需要使用序列
+
+        // 默认使用 SQLite 语法
+        return "; SELECT LAST_INSERT_ROWID();";
     }
 
     /// <summary>执行SQL语句，返回结果中的第一行第一列</summary>

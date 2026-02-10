@@ -64,8 +64,13 @@ public class EFCoreMetaData : DisposeBase, IMetaData
                 var name = row["TABLE_NAME"]?.ToString();
                 if (name.IsNullOrEmpty()) continue;
 
-                // 过滤系统表
-                if (name.StartsWithIgnoreCase("sqlite_", "sys", "__EF")) continue;
+                // 过滤系统表（不同数据库的系统表前缀不同）
+                // SQLite: sqlite_
+                // SQL Server: sys, sys$
+                // MySQL: mysql (系统库), information_schema
+                // PostgreSQL: pg_
+                // EF Core: __EF
+                if (IsSystemTable(name, conn)) continue;
 
                 // 如果指定了表名过滤
                 if (names != null && names.Length > 0 && !names.Any(n => n.EqualIgnoreCase(name)))
@@ -81,6 +86,36 @@ public class EFCoreMetaData : DisposeBase, IMetaData
         }
 
         return list;
+    }
+
+    /// <summary>判断是否为系统表</summary>
+    private Boolean IsSystemTable(String tableName, DbConnection conn)
+    {
+        // 通用系统表前缀
+        var commonPrefixes = new[] { "__EF", "ELMAH" };
+        if (commonPrefixes.Any(p => tableName.StartsWithIgnoreCase(p)))
+            return true;
+
+        // 根据数据库类型判断
+        var typeName = conn.GetType().Name.ToLowerInvariant();
+
+        if (typeName.Contains("sqlite"))
+            return tableName.StartsWithIgnoreCase("sqlite_");
+
+        if (typeName.Contains("sqlserver") || typeName.Contains("sqlconnection"))
+            return tableName.StartsWithIgnoreCase("sys", "sys$", "dt_", "MS");
+
+        if (typeName.Contains("mysql"))
+            return tableName.StartsWithIgnoreCase("mysql", "innodb_");
+
+        if (typeName.Contains("npgsql") || typeName.Contains("postgres"))
+            return tableName.StartsWithIgnoreCase("pg_", "sql_");
+
+        if (typeName.Contains("oracle"))
+            return tableName.StartsWithIgnoreCase("SYS_", "MVIEW$", "AQ$");
+
+        // 默认检查常见的系统表前缀
+        return tableName.StartsWithIgnoreCase("sqlite_", "sys", "pg_");
     }
 
     /// <summary>取得所有表名</summary>

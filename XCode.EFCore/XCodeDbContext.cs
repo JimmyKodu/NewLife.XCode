@@ -50,7 +50,7 @@ public static class EFCoreExtensions
     /// <typeparam name="TEntity">实体类型</typeparam>
     /// <param name="modelBuilder">模型构建器</param>
     /// <param name="tableName">表名（可选）</param>
-    /// <returns></returns>
+    /// <returns>实体类型构建器</returns>
     public static EntityTypeBuilder<TEntity> RegisterXCodeEntity<TEntity>(
         this ModelBuilder modelBuilder,
         String? tableName = null) where TEntity : class
@@ -65,7 +65,7 @@ public static class EFCoreExtensions
 
     /// <summary>创建 SQLite 的 DbContextOptions</summary>
     /// <param name="connectionString">连接字符串</param>
-    /// <returns></returns>
+    /// <returns>DbContext 选项</returns>
     public static DbContextOptions<TContext> CreateSqliteOptions<TContext>(String connectionString)
         where TContext : DbContext
     {
@@ -77,7 +77,7 @@ public static class EFCoreExtensions
 
     /// <summary>创建 SqlServer 的 DbContextOptions</summary>
     /// <param name="connectionString">连接字符串</param>
-    /// <returns></returns>
+    /// <returns>DbContext 选项</returns>
     public static DbContextOptions<TContext> CreateSqlServerOptions<TContext>(String connectionString)
         where TContext : DbContext
     {

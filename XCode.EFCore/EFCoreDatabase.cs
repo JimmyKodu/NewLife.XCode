@@ -156,12 +156,20 @@ public class EFCoreDatabase : DisposeBase, IDatabase
 
     #region 分页
     /// <summary>构造分页SQL</summary>
+    /// <remarks>
+    /// 根据不同数据库使用不同的分页语法：
+    /// - SQL Server 2012+/PostgreSQL: OFFSET...FETCH NEXT（需要ORDER BY）
+    /// - SQLite/MySQL: LIMIT...OFFSET
+    /// - Oracle 12c+: OFFSET...FETCH NEXT
+    /// 默认使用 LIMIT...OFFSET 语法，因为兼容性最好
+    /// </remarks>
     public String PageSplit(String sql, Int64 startRowIndex, Int64 maximumRows, String? keyColumn)
     {
         if (maximumRows <= 0) return sql;
 
-        // 使用标准 OFFSET FETCH 分页语法
-        return $"{sql} OFFSET {startRowIndex} ROWS FETCH NEXT {maximumRows} ROWS ONLY";
+        // 使用 LIMIT...OFFSET 语法，兼容 SQLite/MySQL/PostgreSQL
+        // SQL Server 需要 ORDER BY 才能使用 OFFSET FETCH
+        return $"{sql} LIMIT {maximumRows} OFFSET {startRowIndex}";
     }
 
     /// <summary>构造分页SQL</summary>
@@ -169,7 +177,8 @@ public class EFCoreDatabase : DisposeBase, IDatabase
     {
         if (maximumRows <= 0) return builder;
 
-        builder.Limit = $"OFFSET {startRowIndex} ROWS FETCH NEXT {maximumRows} ROWS ONLY";
+        // 使用 LIMIT...OFFSET 语法
+        builder.Limit = $"LIMIT {maximumRows} OFFSET {startRowIndex}";
         return builder;
     }
     #endregion
