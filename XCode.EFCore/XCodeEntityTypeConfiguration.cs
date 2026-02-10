@@ -57,6 +57,7 @@ public static class XCodeEntityTypeConfiguration
             if (!field.IsNullable && !field.IsIdentity) property.IsRequired();
             if (field.Length > 0) property.HasMaxLength(field.Length);
 
+            // 仅在实体特性显式指定不同列名时进行映射，避免无意义的重复配置
             if (!field.ColumnName.IsNullOrEmpty() && !String.Equals(field.ColumnName, field.Name, StringComparison.OrdinalIgnoreCase))
                 property.HasColumnName(field.ColumnName);
 
